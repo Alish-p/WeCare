@@ -1,5 +1,8 @@
 const express = require('express');
 const coachModel = require('../models/Coach');
+const bookingModel = require('../models/Booking');
+const coachMiddleware = require('../middlewares/Coach');
+
 const { validateCoach } = require('../Utils/Validator');
 const router = express.Router();
 
@@ -59,15 +62,11 @@ router.get('/all', async (req, res) => {
 });
 
 // Returns the details of the coach with provided coach Id
-router.get('/:coachId', async (req, res) => {
+router.get('/:coachId', coachMiddleware, async (req, res) => {
   try {
-    const coach = await coachModel.findOne({ coachId: req.params.coachId });
+    const coach = res.coach;
 
-    if (coach) {
-      res.status(200).json(coach);
-    } else {
-      res.status(400).json({ message: 'Coach Id does not exist' });
-    }
+    res.status(200).json(coach);
   } catch (error) {
     console.log(error);
     res.status(500).send('Something went wrong !');
@@ -75,9 +74,21 @@ router.get('/:coachId', async (req, res) => {
 });
 
 // Returns all the appointments made corresponding to the coach with specified coach Id
-router.get('/booking/:coachId', (req, res) => {
-  console.log('called');
-  res.send('Hello world');
+router.get('/booking/:coachId', coachMiddleware, async (req, res) => {
+  try {
+    const bookings = await bookingModel.find({ coachId: req.params.coachId });
+
+    if (bookings.length == 0) {
+      res.status(400).json({
+        message: 'Could not find any bookings',
+      });
+    } else {
+      res.status(200).json(bookings);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = router;

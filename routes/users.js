@@ -1,6 +1,9 @@
 const express = require('express');
 const userModel = require('../models/User');
-const { validateUser } = require('../Utils/Validator');
+const bookingModel = require('../models/Booking');
+const userMiddleware = require('../middlewares/User');
+const coachMiddleware = require('../middlewares/Coach');
+const { validateUser, validateBooking } = require('../Utils/Validator');
 const router = express.Router();
 
 // Registering the user
@@ -48,21 +51,53 @@ router.post('/login', async (req, res) => {
 });
 
 // Enables the user to make an appointment.
-router.post('/booking/:userId/:coachId', (req, res) => {
-  console.log('called');
-  res.send('Hello world');
-});
+router.post(
+  '/booking/:userId/:coachId',
+  userMiddleware,
+  coachMiddleware,
+  async (req, res) => {
+    try {
+      const { userId, coachId } = req.params;
+      validateBooking(req.body);
+
+      // if slot appointment date and coach exist
+      const x = await bookingModel.findOne({
+        slot: req.body.slot,
+        appointmentDate: req.body.appointmentDate,
+        coachId,
+      });
+      // if slot appointment date and user exist
+      const y = await bookingModel.findOne({
+        slot: req.body.slot,
+        appointmentDate: req.body.appointmentDate,
+        userId,
+      });
+      console.log(x);
+      console.log(y);
+
+      if (x || y) {
+        res
+          .status(400)
+          .json({ message: 'There is an appointment in this slot already' });
+      } else {
+        const booking = await new bookingModel({
+          ...req.body,
+          userId,
+          coachId,
+        }).save();
+        if (booking) res.status(200).send(true);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ message: error.message });
+    }
+  }
+);
 
 // Returns the details of the user with provided user Id
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', userMiddleware, async (req, res) => {
   try {
-    const user = await userModel.findOne({ userId: req.params.userId });
-
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(400).json({ message: 'User Id does not exist' });
-    }
+    res.status(200).json(res.user);
   } catch (error) {
     console.log(error);
     res.status(500).send('Something went wrong !');
@@ -70,9 +105,21 @@ router.get('/:userId', async (req, res) => {
 });
 
 // Returns all the appointments made by the user with specified user id
-router.get('/booking/:userId/:coachId', (req, res) => {
-  console.log('called');
-  res.send('Hello world');
+router.get('/booking/:userId', userMiddleware, async (req, res) => {
+  try {
+    const bookings = await bookingModel.find({ userId: req.params.userId });
+
+    if (bookings.length == 0) {
+      res.status(400).json({
+        message: 'Could not find any bookings',
+      });
+    } else {
+      res.status(200).json(bookings);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = router;

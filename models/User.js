@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const CounterModel = require('./Counter');
 
 const userSchema = new Schema({
-  userId: { type: String },
+  userId: { type: String, immutable: true, unique: true },
   name: String,
   password: String,
   gender: String,
@@ -26,10 +26,9 @@ userSchema.pre('save', async function (next) {
       { upsert: true }
     );
 
-    this.userId = `UI-${counter.seq}`;
+    const userId = counter ? `UI-${counter.seq}` : 'UI-1';
+    this.userId = userId;
 
-    console.log('object');
-    console.log(this);
     next();
   } catch (error) {
     return next(error);

@@ -38,6 +38,11 @@ const validateCoach = ({
   validateSpeciality(speciality);
 };
 
+const validateBooking = ({ slot, dateOfAppointment }) => {
+  validateSlot(slot);
+  validateAppointmentDate(dateOfAppointment);
+};
+
 const validateName = (name) => {
   if (!(name.length >= 3 && name.length <= 50)) {
     let err = new Error('Name should have minimum 3 and maximum 50 characters');
@@ -133,4 +138,34 @@ const validateSpeciality = (speciality) => {
   }
 };
 
-module.exports = { validateUser, validateCoach };
+const validateSlot = (slot) => {
+  // 9 am to 10 am
+  const slotArr = slot.split(' ');
+  const valid = [
+    !isNaN(slotArr[0]),
+    !isNaN(slotArr[3]),
+    ['am', 'pm'].includes(slotArr[1].toLowerCase()),
+    ['am', 'pm'].includes(slotArr[4].toLowerCase()),
+  ].every((each) => each);
+
+  if (!valid) {
+    const err = new Error('Slot should be a valid one');
+    err.status = 400;
+    throw err;
+  }
+};
+
+const validateAppointmentDate = (date) => {
+  var day1 = new Date(date);
+  var today = new Date();
+
+  var difference = Math.abs(day1 - today) / (1000 * 3600 * 24);
+
+  if (difference > 7) {
+    const err = new Error('Date should be any upcoming 7 days');
+    err.status = 400;
+    throw err;
+  }
+};
+
+module.exports = { validateUser, validateCoach, validateBooking };
