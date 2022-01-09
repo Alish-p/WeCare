@@ -44,7 +44,7 @@ const validateBooking = ({ slot, dateOfAppointment }) => {
 };
 
 const validateName = (name) => {
-  if (!(name.length >= 3 && name.length <= 50)) {
+  if (!(name.length > 3 && name.length < 50)) {
     let err = new Error('Name should have minimum 3 and maximum 50 characters');
     err.status = 400;
     throw err;
