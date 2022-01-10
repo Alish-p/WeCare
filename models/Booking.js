@@ -5,7 +5,7 @@ const bookingSchema = new Schema({
   bookingId: { type: String, immutable: true },
   userId: String,
   coachId: String,
-  appointmentDate: Date,
+  dateOfAppointment: Date,
   slot: String,
 });
 

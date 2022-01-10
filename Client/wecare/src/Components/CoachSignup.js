@@ -1,40 +1,11 @@
-import { Formik, Form as FormikForm, Field, ErrorMessage } from 'formik';
-import moment from 'moment';
+import { Formik, Field } from 'formik';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { registerCoach } from '../redux/Slices/Auth';
+import { registerCoach } from '../redux/Slices/CoachAuth';
 import TextField from '../Util/FormComponents/TextField';
 import SelectField from '../Util/FormComponents/RadioField';
-import { Form, Container, Button, Row, Col, Card } from 'react-bootstrap';
-import * as Yup from 'yup';
-
-const schema = Yup.object().shape({
-  name: Yup.string()
-    .min(3, 'Name should have 3 to 50 characters')
-    .max(50, 'Name should have 3 to 50 characters')
-    .required('Name is Required'),
-  password: Yup.string()
-    .min(5, 'Password should have 5 to 10 characters')
-    .max(10, 'Password should have 5 to 10 characters')
-    .required('Password is Required'),
-  speciality: Yup.string()
-    .min(10, 'Speciality should have 10 to 50 characters')
-    .max(50, 'Speciality should have 10 to 50 characters')
-    .required('Speciality is Required'),
-  mobileNumber: Yup.string().matches(
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-    'Mobile Number should have 10 digits'
-  ),
-  dateOfBirth: Yup.string()
-    .required('DOB is Required')
-    .test(
-      'DOB',
-      'Age should be between 20 and 100 years',
-      (date) =>
-        moment().diff(moment(date), 'years') >= 20 &&
-        moment().diff(moment(date), 'years') <= 100
-    ),
-  gender: Yup.string().required('Gender is Required'),
-});
+import { Form, Container, Button, Row, Col } from 'react-bootstrap';
+import { coachSchema } from '../Util/ValidationSchema';
 
 const CoachSignup = () => {
   const isRegistered = useSelector((state) => state.coach.isRegistered);
@@ -59,8 +30,17 @@ const CoachSignup = () => {
   if (isRegistered) {
     return (
       <div>
-        <h1 color="yello">You are registered</h1>
-        <h3>Your coach id {coachId}</h3>
+        <section id="contact" className="contact">
+          <Container data-aos="fade-in">
+            <div className="section-title">
+              <h1>You are a Coach Now !</h1>
+              <h3>Your Coach-ID is {coachId}</h3>
+              <Link to={'/coachlogin'}>
+                <Button>Login Now</Button>
+              </Link>
+            </div>
+          </Container>
+        </section>
       </div>
     );
   }
@@ -76,7 +56,7 @@ const CoachSignup = () => {
           <Formik
             initialValues={initialvalues}
             onSubmit={handleSubmit}
-            validationSchema={schema}
+            validationSchema={coachSchema}
           >
             {({ isSubmitting, handleSubmit, handleChange }) => (
               <Form onSubmit={handleSubmit}>
@@ -110,7 +90,7 @@ const CoachSignup = () => {
                       name="mobileNumber"
                       component={TextField}
                       label="Mobile Number"
-                      placeholder="Enter your Birth Date"
+                      placeholder="Enter your Mobile Number"
                     />
                   </Col>
                 </Row>

@@ -8,7 +8,7 @@ const coachSchema = new Schema({
   gender: String,
   dateOfBirth: Date,
   mobileNumber: Number,
-  specialty: String,
+  speciality: String,
   createdAt: { type: Date, default: Date.now, immutable: true },
   updatedAt: { type: Date, default: Date.now },
 });
