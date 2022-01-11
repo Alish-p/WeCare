@@ -21,6 +21,7 @@ export const loginUser = createAsyncThunk(
     return { data: response.data, user };
   }
 );
+
 export const bookAppointment = createAsyncThunk(
   'userAuth/bookAppointment',
   async ({ userId, coachId, appointment }) => {
@@ -32,11 +33,63 @@ export const bookAppointment = createAsyncThunk(
   }
 );
 
+export const rescheduleAppointment = createAsyncThunk(
+  'userAuth/rescheduleAppointment',
+  async ({ bookingId, appointment }) => {
+    const response = await axios.put(
+      `http://localhost:5000/booking/${bookingId}`,
+      appointment
+    );
+    return response.data;
+  }
+);
+
+export const getMyAppointments = createAsyncThunk(
+  'userAuth/getMyAppointments',
+  async (userId) => {
+    const response = await axios.get(
+      `http://localhost:5000/users/booking/${userId}`
+    );
+    console.log(response);
+
+    return response.data;
+  }
+);
+
+export const getMyProfile = createAsyncThunk(
+  'userAuth/getMyProfile',
+  async (userId) => {
+    const response = await axios.get(`http://localhost:5000/users/${userId}`);
+    console.log(response);
+
+    return response.data;
+  }
+);
+
+export const cancelAppointment = createAsyncThunk(
+  'userAuth/cancelAppointment',
+  async ({ bookingId, userId }) => {
+    await axios.delete(`http://localhost:5000/booking/${bookingId}`);
+    console.log(`userId:${userId}`);
+    console.log(userId);
+    const response = await axios.get(
+      `http://localhost:5000/users/booking/${userId}`
+    );
+    console.log(response);
+
+    return response.data;
+  }
+);
+
 const initialState = {
   isRegistered: false,
-  userId: '',
   isLogged: false,
+  isLoading: false,
+  userId: '',
   error: '',
+  myAppointments: [],
+  booked: false,
+  user: {},
 };
 
 export const userAuthSlice = createSlice({
@@ -48,6 +101,13 @@ export const userAuthSlice = createSlice({
     },
     clearError: (state) => {
       state.error = '';
+    },
+    logoutUser: (state) => {
+      state.user = {};
+      state.myAppointments = [];
+      state.isRegistered = false;
+      state.isLogged = false;
+      state.userId = '';
     },
   },
   extraReducers: {
@@ -87,10 +147,59 @@ export const userAuthSlice = createSlice({
       state.error = 'There is an appointment in this slot already';
       state.booked = false;
     },
+    [rescheduleAppointment.fulfilled]: (state, action) => {
+      state.isLogged = true;
+      state.isRegistered = true;
+      state.booked = true;
+      state.error = '';
+    },
+    [rescheduleAppointment.rejected]: (state, action) => {
+      console.log('Failed', action);
+      state.isLogged = false;
+      state.error = 'There is an appointment in this slot already';
+      state.booked = false;
+    },
+
+    [getMyAppointments.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.error = '';
+      state.myAppointments = action.payload;
+    },
+    [getMyAppointments.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getMyAppointments.rejected]: (state, action) => {
+      console.log('Failed', action);
+      state.myAppointments = [];
+      state.error = 'wrong';
+      state.isLoading = false;
+    },
+    [cancelAppointment.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.error = '';
+      state.myAppointments = action.payload;
+    },
+    [cancelAppointment.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [cancelAppointment.rejected]: (state, action) => {
+      console.log('Failed', action);
+      state.myAppointments = [];
+      state.error = 'wrong';
+      state.isLoading = false;
+    },
+    [getMyProfile.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.error = '';
+      state.user = action.payload;
+    },
+    [getMyProfile.pending]: (state) => {
+      state.isLoading = true;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setBooked } = userAuthSlice.actions;
+export const { setBooked, logoutUser } = userAuthSlice.actions;
 
 export default userAuthSlice.reducer;

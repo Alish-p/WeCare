@@ -9,7 +9,7 @@ const userSchema = new Schema({
   dateOfBirth: Date,
   email: { type: String, unique: true },
   mobileNumber: String,
-  pinCode: Number,
+  pincode: Number,
   city: String,
   state: String,
   country: String,

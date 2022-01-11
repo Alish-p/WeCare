@@ -63,13 +63,13 @@ router.post(
       // if slot appointment date and coach exist
       const x = await bookingModel.findOne({
         slot: req.body.slot,
-        appointmentDate: req.body.appointmentDate,
+        dateOfAppointment: req.body.dateOfAppointment,
         coachId,
       });
       // if slot appointment date and user exist
       const y = await bookingModel.findOne({
         slot: req.body.slot,
-        appointmentDate: req.body.appointmentDate,
+        dateOfAppointment: req.body.dateOfAppointment,
         userId,
       });
       console.log(x);

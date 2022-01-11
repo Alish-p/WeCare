@@ -15,6 +15,7 @@ import CoachViewProfile from './Components/CoachViewProfile';
 import UserViewProfile from './Components/UserViewProfile';
 import UserAppointments from './Components/UserAppointments';
 import MakeAppointment from './Components/MakeAppointment';
+import RescheduleAppointment from './Components/RescheduleAppointment';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -38,6 +39,10 @@ function App() {
             <Route
               path="/makeappointment/:coachId"
               element={<MakeAppointment />}
+            ></Route>
+            <Route
+              path="/reschedule/:bookingId"
+              element={<RescheduleAppointment />}
             ></Route>
 
             <Route

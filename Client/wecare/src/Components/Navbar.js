@@ -1,6 +1,13 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { logoutCoach } from '../redux/Slices/CoachAuth';
+import { logoutUser } from '../redux/Slices/UserAuth';
 
 const NavigationBar = () => {
+  const isUserLogged = useSelector((state) => state.user.isLogged);
+  const isCoachLogged = useSelector((state) => state.coach.isLogged);
+
+  const dispatch = useDispatch();
   return (
     <>
       <header id="header" className="fixed-top">
@@ -11,53 +18,75 @@ const NavigationBar = () => {
 
           <nav id="navbar" className="navbar">
             <ul>
-              <li>
-                <Link className="nav-link scrollto active" to={'/'}>
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link className="nav-link scrollto" to={'/about'}>
-                  About
-                </Link>
-              </li>
+              <Link className="nav-link scrollto" to={'/about'}>
+                About
+              </Link>
 
-              <li className="dropdown">
-                <Link to={'/'}>
-                  <span>Login</span> <i className="bi bi-chevron-down"></i>
-                </Link>
-                <ul>
-                  <li>
-                    <Link to={'/coachlogin'}>Login as a Coach</Link>
-                  </li>
+              {!(isCoachLogged || isUserLogged) && (
+                <>
+                  <li className="dropdown">
+                    <Link to={'/'}>
+                      <span>Login</span> <i className="bi bi-chevron-down"></i>
+                    </Link>
+                    <ul>
+                      <Link to={'/coachlogin'}>Login as a Coach</Link>
 
-                  <li>
-                    <Link to={'/userlogin'}>Login as a User</Link>
+                      <Link to={'/userlogin'}>Login as a User</Link>
+                    </ul>
                   </li>
-                </ul>
-              </li>
-              <li className="dropdown">
-                <Link to={'/'}>
-                  <span>Register</span> <i className="bi bi-chevron-down"></i>
-                </Link>
-                <ul>
-                  <li>
-                    <Link to={'/coachsignup'}>Register as a Coach</Link>
-                  </li>
+                  <li className="dropdown">
+                    <Link to={'/'}>
+                      <span>Register</span>{' '}
+                      <i className="bi bi-chevron-down"></i>
+                    </Link>
+                    <ul>
+                      <Link to={'/coachsignup'}>Register as a Coach</Link>
 
-                  <li>
-                    <Link to={'/usersignup'}>Register as a User</Link>
+                      <Link to={'/usersignup'}>Register as a User</Link>
+                    </ul>
                   </li>
-                </ul>
-              </li>
+                </>
+              )}
 
-              <li>
-                <a className="getstarted scrollto" href="#about">
-                  Get Started
-                </a>
-              </li>
+              {isUserLogged && (
+                <>
+                  <Link className="nav-link scrollto" to={'/userappointments'}>
+                    My Appoitments
+                  </Link>
+                  <Link className="getstarted scrollto" to={'/userviewprofile'}>
+                    View Profile
+                  </Link>
+                  <li
+                    onClick={() => {
+                      dispatch(logoutUser());
+                    }}
+                  >
+                    <button className="getstarted scrollto">Log Out</button>
+                  </li>
+                </>
+              )}
+
+              {isCoachLogged && (
+                <>
+                  <Link className="nav-link scrollto" to={'/coachschedules'}>
+                    My Schedules
+                  </Link>
+                  <Link
+                    className="getstarted scrollto"
+                    to={'/coachviewprofile'}
+                  >
+                    View Profile
+                  </Link>
+                  <li
+                    onClick={() => {
+                      dispatch(logoutCoach());
+                    }}
+                  >
+                    <button className="getstarted scrollto">Log Out</button>
+                  </li>
+                </>
+              )}
             </ul>
-            <i className="bi bi-list mobile-nav-toggle"></i>
           </nav>
         </div>
       </header>

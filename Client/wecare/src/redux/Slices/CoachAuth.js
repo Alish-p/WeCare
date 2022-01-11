@@ -42,6 +42,7 @@ const initialState = {
   isLogged: false,
   coachId: '',
   error: '',
+  isLoading: false,
   bookings: [],
 };
 
@@ -49,17 +50,11 @@ export const coachAuthSlice = createSlice({
   name: 'coachAuth',
   initialState,
   reducers: {
-    registerSuccess: (state, action) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.isRegistered = true;
-      state.coachId = action.payload.message;
-    },
-    registerFailed: (state) => {
+    logoutCoach: (state) => {
+      state.user = {};
+      state.bookings = [];
       state.isRegistered = false;
-      state.coachId = '';
+      state.isLogged = false;
     },
   },
   extraReducers: {
@@ -85,17 +80,23 @@ export const coachAuthSlice = createSlice({
       console.log('Failed', action.payload);
     },
     [findAllAppointments.fulfilled]: (state, action) => {
+      state.isLoading = false;
       state.bookings = action.payload;
       console.log('Bookings fetched', action.payload);
     },
     [findAllAppointments.rejected]: (state, action) => {
-      state.bookings = action.payload;
+      state.isLoading = false;
+      state.bookings = [];
       console.log('Bookings not fetched', action.payload);
+    },
+
+    [findAllAppointments.pending]: (state) => {
+      state.isLoading = true;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { registerSuccess, registerFailed } = coachAuthSlice.actions;
+export const { logoutCoach } = coachAuthSlice.actions;
 
 export default coachAuthSlice.reducer;
