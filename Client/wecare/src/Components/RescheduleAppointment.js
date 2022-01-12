@@ -2,7 +2,7 @@ import { Field, Formik } from 'formik';
 import { Button, Container, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { rescheduleAppointment } from '../redux/Slices/UserAuth';
 import SelectField from '../Util/FormComponents/RadioField';
 import TextField from '../Util/FormComponents/TextField';

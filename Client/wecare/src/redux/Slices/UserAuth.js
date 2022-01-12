@@ -83,9 +83,9 @@ export const cancelAppointment = createAsyncThunk(
 
 const initialState = {
   isRegistered: false,
-  isLogged: false,
+  isLogged: localStorage.getItem('userId') ? true : false,
   isLoading: false,
-  userId: '',
+  userId: localStorage.getItem('userId') || '',
   error: '',
   myAppointments: [],
   booked: false,
@@ -108,6 +108,7 @@ export const userAuthSlice = createSlice({
       state.isRegistered = false;
       state.isLogged = false;
       state.userId = '';
+      localStorage.removeItem('userId');
     },
   },
   extraReducers: {
@@ -126,10 +127,12 @@ export const userAuthSlice = createSlice({
       state.userId = action.payload.user.id;
       state.isRegistered = true;
       state.error = '';
+      localStorage.setItem('userId', action.payload.user.id);
     },
     [loginUser.rejected]: (state, action) => {
       state.isLogged = false;
       state.userId = '';
+      localStorage.setItem('userId', '');
 
       state.error = 'Invalid Credentials';
 

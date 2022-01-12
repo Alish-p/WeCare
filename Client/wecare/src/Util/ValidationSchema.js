@@ -53,13 +53,14 @@ export const userSchema = Yup.object().shape({
     .required('Email is required'),
   dateOfBirth: Yup.string()
     .required('DOB is Required')
-    .test(
-      'DOB',
-      'Age should be between 20 and 100 years',
-      (date) =>
-        moment(date).diff(moment(), 'years') >= 20 &&
-        moment(date).diff(moment(), 'years') <= 100
-    ),
+    .test('DOB', 'Age should be between 20 and 100 years', (date) => {
+      console.log(date);
+      console.log(moment().diff(moment(date), 'years'));
+      return (
+        moment().diff(moment(date), 'years') >= 20 &&
+        moment().diff(moment(date), 'years') <= 100
+      );
+    }),
   gender: Yup.string().required('Gender is Required'),
 
   city: Yup.string()
@@ -88,8 +89,12 @@ export const BookingSchema = Yup.object().shape({
     .test(
       'dateOfAppointment',
       'Appointment date should be any upcoming 7 days',
-      (date) =>
-        moment().diff(moment(date), 'days') <= 7 &&
-        moment().diff(moment(date), 'days') >= 0
+      (date) => {
+        console.log(moment(date).diff(moment(), 'days'));
+        return (
+          moment(date).diff(moment(), 'days') <= 7 &&
+          moment(date).diff(moment(), 'days') >= 0
+        );
+      }
     ),
 });

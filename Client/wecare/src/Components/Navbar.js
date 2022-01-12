@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { logoutCoach } from '../redux/Slices/CoachAuth';
 import { logoutUser } from '../redux/Slices/UserAuth';
 
@@ -8,6 +9,14 @@ const NavigationBar = () => {
   const isCoachLogged = useSelector((state) => state.coach.isLogged);
 
   const dispatch = useDispatch();
+
+  const [redirect, setRedirect] = useState(false);
+
+  if (redirect) {
+    dispatch(logoutUser());
+    // return <Navigate to={'/'}></Navigate>;
+  }
+
   return (
     <>
       <header id="header" className="fixed-top">
@@ -18,12 +27,14 @@ const NavigationBar = () => {
 
           <nav id="navbar" className="navbar">
             <ul>
-              <Link className="nav-link scrollto" to={'/about'}>
-                About
-              </Link>
-
               {!(isCoachLogged || isUserLogged) && (
                 <>
+                  {isUserLogged && (
+                    <Link className="nav-link scrollto" to={'/userhome'}>
+                      Book Appointments
+                    </Link>
+                  )}
+
                   <li className="dropdown">
                     <Link to={'/'}>
                       <span>Login</span> <i className="bi bi-chevron-down"></i>
@@ -57,11 +68,12 @@ const NavigationBar = () => {
                     View Profile
                   </Link>
                   <li
+                    className="getstarted scrollto"
                     onClick={() => {
-                      dispatch(logoutUser());
+                      setRedirect(true);
                     }}
                   >
-                    <button className="getstarted scrollto">Log Out</button>
+                    Log Out
                   </li>
                 </>
               )}
@@ -78,11 +90,13 @@ const NavigationBar = () => {
                     View Profile
                   </Link>
                   <li
+                    className="getstarted scrollto"
                     onClick={() => {
+                      setRedirect(true);
                       dispatch(logoutCoach());
                     }}
                   >
-                    <button className="getstarted scrollto">Log Out</button>
+                    Log Out
                   </li>
                 </>
               )}

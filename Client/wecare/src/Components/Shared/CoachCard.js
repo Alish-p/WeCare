@@ -5,6 +5,7 @@ import img from '../../Assets/team/team-1.jpg';
 
 const StyledButton = styled(Button)`
   padding-left: '-3px';
+  margin-top: '3px';
   color: #37517e;
   border-color: #37517e;
   &:hover {
@@ -12,7 +13,13 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const CoachCard = ({ name, coachId, speciality, mobileNumber }) => {
+const CoachCard = ({
+  name,
+  coachId,
+  speciality,
+  mobileNumber,
+  showBookButton,
+}) => {
   return (
     <Col lg={6} className="my-3">
       <Container className="member" data-aos="zoom-in" data-aos-delay="100">
@@ -27,13 +34,15 @@ const CoachCard = ({ name, coachId, speciality, mobileNumber }) => {
               <h4>{name}</h4>
               <span>Coach ID: {coachId}</span>
               <p>Specializes in {speciality}</p>
-              <div className="social">
-                <Link to={`/makeappointment/${coachId}`}>
-                  <StyledButton variant="outline-primary">
-                    Book an Appointment
-                  </StyledButton>
-                </Link>
-              </div>
+              {showBookButton && (
+                <div className="mt-3">
+                  <Link to={`/makeappointment/${coachId}`}>
+                    <StyledButton variant="outline-primary">
+                      Book an Appointment
+                    </StyledButton>
+                  </Link>
+                </div>
+              )}
             </div>
           </Col>
         </Row>

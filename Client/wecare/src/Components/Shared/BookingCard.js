@@ -41,14 +41,18 @@ const BookingCard = ({
           </Col>
         </Row>
         {isUser && (
-          <Row>
+          <Row className="m-3">
             <Col>
               <Link to={`/reschedule/${bookingId}`}>
-                <StyledButton>Reschedule</StyledButton>
+                <StyledButton variant="outline-primary">
+                  Reschedule
+                </StyledButton>
               </Link>
             </Col>
             <Col>
-              <StyledButton onClick={handleCancel}>Cancel</StyledButton>
+              <StyledButton variant="outline-primary" onClick={handleCancel}>
+                Cancel
+              </StyledButton>
             </Col>
           </Row>
         )}

@@ -5,7 +5,7 @@ import { getAllCoaches } from '../redux/Slices/Coaches';
 import { setBooked } from '../redux/Slices/UserAuth';
 import CoachCard from './Shared/CoachCard';
 
-const UserHome = () => {
+const UserHome = ({ showBookButton = true }) => {
   const dispatch = useDispatch();
   const coaches = useSelector((state) => state.coaches.coaches);
   const isLoading = useSelector((state) => state.coaches.isLoading);
@@ -38,6 +38,7 @@ const UserHome = () => {
                   name={name}
                   coachId={coachId}
                   speciality={speciality}
+                  showBookButton={showBookButton}
                 />
               ))}
           </Row>

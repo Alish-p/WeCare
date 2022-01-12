@@ -12,6 +12,12 @@ const StyledButton = styled(Button)`
   }
 `;
 
+const StyledSpan = styled.div`
+  color: #37517e;
+  display: inline;
+  font-weight: bolder;
+`;
+
 const UserCard = ({
   user: { name, userId, dateOfBirth, email, city, state, country, pincode },
 }) => {
@@ -26,17 +32,33 @@ const UserCard = ({
           </Col>
           <Col>
             <div className="member-info">
-              <h4>{name}</h4>
-              <span>User ID: {userId}</span>
-              <p>Date Of Birth: {dateOfBirth}</p>
-              <p>Email: {email}</p>
-              <p>Address: {`${city}, ${state},${country}`}</p>
-              <p>Pincode: {pincode}</p>
-            </div>
-            <div className="social">
-              <Link to={`/userhome`}>
-                <StyledButton variant="outline-primary">Go Back</StyledButton>
-              </Link>
+              <span>
+                <h4>{name}</h4>
+              </span>
+              <br></br>
+              <div>
+                <StyledSpan>User ID: </StyledSpan> {userId}
+              </div>
+              <div>
+                <StyledSpan>Date Of Birth: </StyledSpan>{' '}
+                {new Date(dateOfBirth).toLocaleDateString('en-US')}
+              </div>
+              <div>
+                <StyledSpan>Email: </StyledSpan> {email}
+              </div>
+              <div>
+                <StyledSpan>Address: </StyledSpan>{' '}
+                {`${city}, ${state},${country}`}
+              </div>
+              <div>
+                <StyledSpan>Pincode: </StyledSpan> {pincode}
+              </div>
+
+              <div className="mt-3">
+                <Link to={`/userhome`}>
+                  <StyledButton variant="outline-primary">Go Back</StyledButton>
+                </Link>
+              </div>
             </div>
           </Col>
         </Row>
