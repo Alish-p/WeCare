@@ -54,8 +54,6 @@ export const userSchema = Yup.object().shape({
   dateOfBirth: Yup.string()
     .required('DOB is Required')
     .test('DOB', 'Age should be between 20 and 100 years', (date) => {
-      console.log(date);
-      console.log(moment().diff(moment(date), 'years'));
       return (
         moment().diff(moment(date), 'years') >= 20 &&
         moment().diff(moment(date), 'years') <= 100
@@ -90,7 +88,6 @@ export const BookingSchema = Yup.object().shape({
       'dateOfAppointment',
       'Appointment date should be any upcoming 7 days',
       (date) => {
-        console.log(moment(date).diff(moment(), 'days'));
         return (
           moment(date).diff(moment(), 'days') <= 7 &&
           moment(date).diff(moment(), 'days') >= 0
