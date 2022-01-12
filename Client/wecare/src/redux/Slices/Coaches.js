@@ -36,17 +36,14 @@ export const coachesSlice = createSlice({
     [getAllCoaches.pending]: (state, action) => {
       state.isLoading = true;
       state.coaches = action.payload;
-      console.log('Fetched', action.payload);
     },
     [getAllCoaches.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.coaches = action.payload;
-      console.log('Fetched', action.payload);
     },
     [getAllCoaches.rejected]: (state, action) => {
       state.isRegistered = false;
       state.userId = '';
-      console.log('Wrong', action.payload);
     },
   },
 });

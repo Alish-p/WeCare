@@ -18,7 +18,6 @@ const CoachLogin = () => {
   };
 
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
     dispatch(loginCoach(values));
     setSubmitting(false);
   };

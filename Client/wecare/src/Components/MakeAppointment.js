@@ -31,7 +31,6 @@ const MakeAppointment = () => {
       })
     );
     setSubmitting(false);
-    console.log(values);
   };
 
   if (booked) {

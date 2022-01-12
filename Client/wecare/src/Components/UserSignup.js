@@ -26,7 +26,6 @@ const UserSignup = () => {
   };
 
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
     dispatch(registerUser(values));
     setSubmitting(false);
   };

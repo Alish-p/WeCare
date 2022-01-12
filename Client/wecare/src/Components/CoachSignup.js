@@ -22,7 +22,6 @@ const CoachSignup = () => {
   };
 
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
     dispatch(registerCoach(values));
     setSubmitting(false);
   };

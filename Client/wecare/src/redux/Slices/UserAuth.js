@@ -5,7 +5,6 @@ import axios from 'axios';
 export const registerUser = createAsyncThunk(
   'userAuth/registerUser',
   async (user) => {
-    console.log(JSON.stringify(user));
     const response = await axios.post('http://localhost:5000/users/', user);
     return response.data;
   }
@@ -50,7 +49,6 @@ export const getMyAppointments = createAsyncThunk(
     const response = await axios.get(
       `http://localhost:5000/users/booking/${userId}`
     );
-    console.log(response);
 
     return response.data;
   }
@@ -60,7 +58,6 @@ export const getMyProfile = createAsyncThunk(
   'userAuth/getMyProfile',
   async (userId) => {
     const response = await axios.get(`http://localhost:5000/users/${userId}`);
-    console.log(response);
 
     return response.data;
   }
@@ -70,12 +67,9 @@ export const cancelAppointment = createAsyncThunk(
   'userAuth/cancelAppointment',
   async ({ bookingId, userId }) => {
     await axios.delete(`http://localhost:5000/booking/${bookingId}`);
-    console.log(`userId:${userId}`);
-    console.log(userId);
     const response = await axios.get(
       `http://localhost:5000/users/booking/${userId}`
     );
-    console.log(response);
 
     return response.data;
   }
@@ -115,12 +109,10 @@ export const userAuthSlice = createSlice({
     [registerUser.fulfilled]: (state, action) => {
       state.isRegistered = true;
       state.userId = action.payload.message;
-      console.log('Succeed', action.payload);
     },
     [registerUser.rejected]: (state, action) => {
       state.isRegistered = false;
       state.userId = '';
-      console.log('Failed', action.payload);
     },
     [loginUser.fulfilled]: (state, action) => {
       state.isLogged = true;
@@ -135,8 +127,6 @@ export const userAuthSlice = createSlice({
       localStorage.setItem('userId', '');
 
       state.error = 'Invalid Credentials';
-
-      console.log('Failed', action.payload);
     },
     [bookAppointment.fulfilled]: (state, action) => {
       state.isLogged = true;
@@ -145,7 +135,6 @@ export const userAuthSlice = createSlice({
       state.error = '';
     },
     [bookAppointment.rejected]: (state, action) => {
-      console.log('Failed', action);
       state.isLogged = false;
       state.error = 'There is an appointment in this slot already';
       state.booked = false;
@@ -157,7 +146,6 @@ export const userAuthSlice = createSlice({
       state.error = '';
     },
     [rescheduleAppointment.rejected]: (state, action) => {
-      console.log('Failed', action);
       state.isLogged = false;
       state.error = 'There is an appointment in this slot already';
       state.booked = false;
@@ -172,7 +160,6 @@ export const userAuthSlice = createSlice({
       state.isLoading = true;
     },
     [getMyAppointments.rejected]: (state, action) => {
-      console.log('Failed', action);
       state.myAppointments = [];
       state.error = 'wrong';
       state.isLoading = false;
@@ -186,7 +173,6 @@ export const userAuthSlice = createSlice({
       state.isLoading = true;
     },
     [cancelAppointment.rejected]: (state, action) => {
-      console.log('Failed', action);
       state.myAppointments = [];
       state.error = 'wrong';
       state.isLoading = false;

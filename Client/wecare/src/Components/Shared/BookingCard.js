@@ -21,8 +21,6 @@ const BookingCard = ({
   const dispatch = useDispatch();
 
   const handleCancel = () => {
-    console.log(`my uid is `);
-    console.log(userId);
     dispatch(cancelAppointment({ bookingId, userId }));
     showModal();
   };

@@ -31,7 +31,6 @@ const RescheduleAppointment = () => {
       })
     );
     setSubmitting(false);
-    console.log(values);
   };
 
   if (booked) {
