@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 import { logoutCoach } from '../redux/Slices/CoachAuth';
@@ -9,13 +8,6 @@ const NavigationBar = () => {
   const isCoachLogged = useSelector((state) => state.coach.isLogged);
 
   const dispatch = useDispatch();
-
-  const [redirect, setRedirect] = useState(false);
-
-  if (redirect) {
-    dispatch(logoutUser());
-    // return <Navigate to={'/'}></Navigate>;
-  }
 
   return (
     <>
@@ -29,12 +21,9 @@ const NavigationBar = () => {
             <ul>
               {!(isCoachLogged || isUserLogged) && (
                 <>
-                  {isUserLogged && (
-                    <Link className="nav-link scrollto" to={'/userhome'}>
-                      Book Appointments
-                    </Link>
-                  )}
-
+                  <Link className="nav-link scrollto" to={'/about'}>
+                    About
+                  </Link>
                   <li className="dropdown">
                     <Link to={'/'}>
                       <span>Login</span> <i className="bi bi-chevron-down"></i>
@@ -61,6 +50,9 @@ const NavigationBar = () => {
 
               {isUserLogged && (
                 <>
+                  <Link className="nav-link scrollto" to={'/userhome'}>
+                    Book Appointments
+                  </Link>
                   <Link className="nav-link scrollto" to={'/userappointments'}>
                     My Appoitments
                   </Link>
@@ -70,7 +62,7 @@ const NavigationBar = () => {
                   <li
                     className="getstarted scrollto"
                     onClick={() => {
-                      setRedirect(true);
+                      dispatch(logoutUser());
                     }}
                   >
                     Log Out
@@ -92,7 +84,6 @@ const NavigationBar = () => {
                   <li
                     className="getstarted scrollto"
                     onClick={() => {
-                      setRedirect(true);
                       dispatch(logoutCoach());
                     }}
                   >
